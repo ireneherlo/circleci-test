@@ -27,6 +27,16 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: cat ~/output.txt
+  error_job:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: return 1
+      - run:
+          name: on error
+          command: echo "ERROR!"
+          when: on_fail
+
 #  print_hello:
 #    docker:
 #      - image: circleci/node:13.8.0
@@ -42,6 +52,7 @@ workflows:
   welcome:
     # Run the welcome/run job in its own container
     jobs:
+      - error_job
       - save_hello_world_output
       - print_output_file:
           requires:
